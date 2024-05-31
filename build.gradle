@@ -1,19 +1,120 @@
+// 用于配置构建脚本本身的依赖项和仓库
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://maven.aliyun.com/repository/public" // 使用aliyun仓库镜像
+        }
+//        maven {
+//            allowInsecureProtocol = true 支持http协议价值依赖
+//        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+    }
+}
+// 声明Gradle使用的插件,在脚本顶层使用
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
-group = 'com.org.oycm'
-version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://maven.aliyun.com/repository/public" // 使用aliyun仓库镜像
+    }
 }
+
+// allprojects: 用于配置多项目构建中的所有项目或子项目
+allprojects {
+
+    // ext 定义额外项目属性
+    ext {
+        springBootVersion = "2.7.18"
+    }
+
+    // 引入插件
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+    sourceCompatibility = 1.8
+
+    //跳过测试
+    test {
+        enabled = false
+    }
+    repositories {
+        maven {
+            url "https://maven.aliyun.com/repository/public"
+        }
+        mavenCentral()
+    }
+
+    group = 'com.org.oycm'
+    version = '1.0-SNAPSHOT'
+
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = "UTF-8"
+    dependencies {
+        // 引入依赖的方式
+        // implementation 声明在编译时需要但不需要暴露给使用此模块的编译器的依赖
+        // compileOnly 声明只在编译时需要,但在运行时不需要的依赖,例如：lombok
+        // runtimeOnly 声明只在运行时需要,但在编译时不需要的依赖,例如：JDBC驱动
+        // testImplementation 声明只在测试编译和运行时需要的依赖
+        // testCompileOnly 只在测试编译时需要的依赖,而在测试运行时不需要
+        // testRuntimeOnly 测试运行时需要的依赖,而在测试编译时不需要
+        // annotationProcessor 声明注解处理器的依赖,只在编译期间使用,生成代码或其他编译时工件
+        // api 用于声明在编译时和运行时都需要的依赖,并且这些依赖对使用此模块的编译器是可见的
+        // compileClasspath 配置用于定义编译时的类路径,但不会影响运行时的类路径
+        // runtimeClasspath 配置用于定义运行时的类路径,但不会影响编译时的类路径
+        // compile 在编译时和运行时都需要的依赖,并且这些依赖对使用此模块的编译器是可见的,已被implementation和api取代
+        // runtime 声明了在运行时需要的依赖,已被runtimeOnly取代
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+        compileOnly('org.projectlombok:lombok:1.18.32')
+        annotationProcessor 'org.projectlombok:lombok:1.18.32'
+        testCompileOnly 'org.projectlombok:lombok:1.18.32'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
+    }
+
+    // 排除依赖
+    configurations.all {
+        exclude group: 'org.apache.logging.log4j', module: 'log4j-api'
+        exclude group: 'log4j', module: 'log4j'
+    }
+}
+
+// subprojects 所有子项目
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+    // 添加安全登录插件
+    implementation("org.springframework.boot:spring-boot-starter-security")
 }
 
-test {
-    useJUnitPlatform()
-}
+/*
+def jarName = "gradleProject.jar"
+def buildProjectName = "gradleProject"
+task buildJar(dependsOn: buildProjectName + ':build') doLast {
+    ["build/dev", "build/test", "build/prod"].each { dest ->
+        copy {
+            from buildProjectName + "/build/libs/" + jarName
+            into dest
+            from buildProjectName + "/dist/springBoot.sh"
+            into dest
+            from buildProjectName + "/dist/springBoot.bat"
+            into dest
+            from buildProjectName + "/dist/startGatewayJavaFx.bat"
+            into dest
+            from(buildProjectName + "/dist/application-".concat(dest.replace('build/', '')).concat(".yml"))
+            into dest
+            rename { String fileName ->
+                fileName.replace('-'.concat(dest.replace('build/', '')), '')
+            }
+        }
+    }
+    file(buildProjectName + "/build").deleteDir()
+}*/
