@@ -1,2 +1,4 @@
 // 修改项目名
 rootProject.name = 'gradleProject'
+include 'app'
+
