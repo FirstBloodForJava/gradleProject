@@ -10,7 +10,7 @@ buildscript {
 //        }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.7.18")
     }
 }
 // 声明Gradle使用的插件,在脚本顶层使用
