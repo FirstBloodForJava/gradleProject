@@ -9,6 +9,7 @@ buildscript {
 //            allowInsecureProtocol = true 支持http协议价值依赖
 //        }
     }
+    // 相当于maven中parent的spring-boot版本
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.7.18")
     }
@@ -84,6 +85,10 @@ allprojects {
 }
 
 // subprojects 所有子项目
+
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
