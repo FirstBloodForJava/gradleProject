@@ -100,6 +100,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
 }
 
+// SpringBoot插件提供的一个任务，用于生成可执行的Jar文件
+// org.springframework.boot io.spring.dependency-management 插件之后
+bootJar {
+    archiveBaseName = 'gradleSpring'
+}
+
 // 定义一个在 项目构建之后执行的task
 def buildProjectName = "app"
 task buildJar(dependsOn: buildProjectName + ':build') doLast {
