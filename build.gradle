@@ -100,12 +100,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
 }
 
-def jarName = "gradleProject.jar"
+// 定义一个在 项目构建之后执行的task
 def buildProjectName = "app"
 task buildJar(dependsOn: buildProjectName + ':build') doLast {
     ["build/dev", "build/test", "build/prod"].each { dest ->
         copy {
-            from buildProjectName + "/build/libs/" + jarName
+            from buildProjectName + "/build/libs/" + buildProjectName + ".jar"
             into dest
             from buildProjectName + "/dist/springBoot.sh"
             into dest
@@ -122,3 +122,42 @@ task buildJar(dependsOn: buildProjectName + ':build') doLast {
     }
     file(buildProjectName + "/build").deleteDir()
 }
+
+
+def jarName = "gradleProject.jar"
+gradle.taskGraph.whenReady { taskGraph ->
+    taskGraph.allTasks.each { task ->
+        if (task.name == 'build') {
+            task.doLast {
+                // project.name == 'gradleProject' 这个放在外层 结果会是true
+                if (project.name == 'gradleProject') {
+                    println 'Build task finished, invoke task'
+                    // 在这里添加你希望在构建后执行的代码
+
+                    ["build/dev", "build/test", "build/prod"].each { dest ->
+                        copy {
+                            from "/build/libs/" + jarName
+                            into dest
+                            from "/dist/springBoot.sh"
+                            into dest
+                            from "/dist/springBoot.bat"
+                            into dest
+                            from "/dist/startGatewayJavaFx.bat"
+                            into dest
+                            from("/dist/application-".concat(dest.replace('build/', '')).concat(".yml"))
+                            into dest
+                            rename { String fileName ->
+                                fileName.replace('-'.concat(dest.replace('build/', '')), '')
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        }
+    }
+}
+
+
+

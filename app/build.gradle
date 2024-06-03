@@ -9,9 +9,16 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+project(':app') {
+    apply plugin: 'idea'
+    // apply plugin: 'org.springframework.boot' 构建spring boot项目
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencies {
+        testImplementation platform('org.junit:junit-bom:5.9.1')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+    }
+
 }
 
 test {
