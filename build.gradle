@@ -104,6 +104,7 @@ dependencies {
 // org.springframework.boot io.spring.dependency-management 插件之后
 bootJar {
     archiveBaseName = 'gradleSpring'
+    archiveVersion = '0.1.0'
 }
 
 // 定义一个在 项目构建之后执行的task
