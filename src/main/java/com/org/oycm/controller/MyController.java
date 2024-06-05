@@ -1,6 +1,7 @@
 package com.org.oycm.controller;
 
 import com.org.oycm.config.BeanUtils;
+import com.org.oycm.config.DynamicControllerConfig;
 import com.org.oycm.service.MyPrototypeService;
 import com.org.oycm.service.MySingletonService;
 import org.apache.commons.logging.Log;
@@ -23,6 +24,9 @@ public class MyController {
 
     @Autowired
     MySingletonService mySingletonService;
+
+    @Autowired
+    DynamicControllerConfig dynamicControllerConfig;
 
     @GetMapping("getPrototype")
     public String getPrototypeInfo(){
@@ -48,6 +52,13 @@ public class MyController {
     public String updateSingleton(@PathVariable("name") String name){
         myPrototypeService.setJobName(name);
         return myPrototypeService.string();
+    }
+
+    @GetMapping("destroy")
+    public String destroyDynamic(){
+        log.info("关闭请求");
+        dynamicControllerConfig.destroy();
+        return "";
     }
 
 }

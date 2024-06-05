@@ -51,4 +51,13 @@ public class DynamicControllerConfig {
     public String handleDynamicRequest() {
         return "Dynamic Response";
     }
+
+    public void destroy() {
+
+        if (mappingInfo != null) {
+            requestMappingHandlerMapping.unregisterMapping(mappingInfo);
+            mappingInfo = null;
+        }
+
+    }
 }
