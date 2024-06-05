@@ -98,6 +98,9 @@ dependencies {
 
     // 添加安全登录插件
     implementation("org.springframework.boot:spring-boot-starter-security")
+
+    // 添加web依赖
+    api("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
 }
 
 // SpringBoot插件提供的一个任务，用于生成可执行的Jar文件
