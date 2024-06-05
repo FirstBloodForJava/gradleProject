@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
  * @author ouyangcm
  * create 2024/6/5 16:12
  */
-@Service("myService")
+@Service("myPrototypeService")
 @Scope("prototype")
-public class MyService {
+public class MyPrototypeService {
 
     private String jobId;
     private String jobName;
