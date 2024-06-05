@@ -1,5 +1,6 @@
 package com.org.oycm.controller;
 
+import com.org.oycm.config.BeanUtils;
 import com.org.oycm.service.MyPrototypeService;
 import com.org.oycm.service.MySingletonService;
 import org.apache.commons.logging.Log;
@@ -26,12 +27,14 @@ public class MyController {
     @GetMapping("getPrototype")
     public String getPrototypeInfo(){
         log.info("prototype: " + myPrototypeService);
+        log.info("prototype: " + BeanUtils.getBean("myPrototypeService"));
         return myPrototypeService.string();
     }
 
     @GetMapping("getSingleton")
     public String getSingletonInfo(){
         log.info("singleton: " + mySingletonService);
+        log.info("singleton: " + BeanUtils.getBean("mySingletonService"));
         return mySingletonService.string();
     }
 
